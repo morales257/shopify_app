@@ -6,4 +6,7 @@ ShopifyApp.configure do |config|
   config.embedded_app = true
   config.after_authenticate_job = false
   config.session_repository = Shop
+  config.webhooks = [
+    {topic: 'carts/update', address:'https://e32239be.ngrok.io/webhooks/carts_update', format: 'json'}
+  ]
 end
