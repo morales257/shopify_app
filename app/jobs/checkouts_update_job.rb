@@ -8,10 +8,10 @@ class CheckoutsUpdateJob < ActiveJob::Base
       puts "starting session"
       if webhook[:shipping_address][:phone]
         puts "creating AC"
+        binding.pry
         checkout = {
                       checkout_id: webhook[:id],
                       phone: webhook[:shipping_address][:phone],
-                      binding.pry
                       first_name: webhook[:shipping_address][:first_name],
                       last_name: webhook[:shipping_address][:last_name],
                       email: webhook[:email],
