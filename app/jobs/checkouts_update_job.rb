@@ -5,21 +5,14 @@ class CheckoutsUpdateJob < ActiveJob::Base
       puts "starting session"
       if webhook[:shipping_address][:phone]
         puts "creating AC"
-        checkout =
-            {
-              checkout_id: webhook[:id],
-              puts "id saved"
-              phone: webhook[:shipping_address][:phone],
-              puts "phone saved"
-              first_name: webhook[:shipping_address][:first_name],
-              puts "name saved"
-              last_name: webhook[:shipping_address][:last_name],
-              puts "last name saved"
-              email: webhook[:email],
-              puts "email saved"
-              discount_codes: webhook[:discount_codes][:code]
-              puts "codes saved"
-            }
+        checkout = {
+                      checkout_id: webhook[:id],
+                      phone: webhook[:shipping_address][:phone],
+                      first_name: webhook[:shipping_address][:first_name],
+                      last_name: webhook[:shipping_address][:last_name],
+                      email: webhook[:email],
+                      discount_codes: webhook[:discount_codes][:code]
+                    }
         puts "creating new checkout"
         new_checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create(checkout)
         shop.checkouts << new_checkout
