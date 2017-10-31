@@ -11,6 +11,7 @@ class CheckoutsUpdateJob < ActiveJob::Base
         checkout = {
                       checkout_id: webhook[:id],
                       phone: webhook[:shipping_address][:phone],
+                      binding.pry
                       first_name: webhook[:shipping_address][:first_name],
                       last_name: webhook[:shipping_address][:last_name],
                       email: webhook[:email],
