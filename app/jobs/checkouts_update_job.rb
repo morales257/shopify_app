@@ -12,8 +12,9 @@ class CheckoutsUpdateJob < ActiveJob::Base
               email: webhook[:email],
               discount_codes: webhook[:discount_codes][:code]
             }
-        checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create(checkout)
-        shop.checkouts << checkout
+        new_checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create(checkout)
+        shop.checkouts << new_checkout
+        puts "Saved new checkout" if new_checkout.saved?
       else
         puts "This checkout does not have a phone number"
       end
