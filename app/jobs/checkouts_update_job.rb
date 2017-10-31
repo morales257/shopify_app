@@ -14,7 +14,7 @@ class CheckoutsUpdateJob < ActiveJob::Base
         #              discount_codes: webhook[:discount_codes][:code]
         #            }
         puts "creating new checkout"
-        new_checkout = Checkout.where(checkout_id: webook[:id]).first_or_create(
+        new_checkout = Checkout.where(checkout_id: webhook[:id]).first_or_create(
         phone: webhook[:shipping_address][:phone], first_name: webhook[:shipping_address][:first_name],
         last_name: webhook[:shipping_address][:last_name], email: webhook[:email], discount_codes: webhook[:discount_codes][:code])
         shop.checkouts << new_checkout
