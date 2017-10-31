@@ -9,7 +9,7 @@ ShopifyApp.configure do |config|
   config.webhooks = [
     {topic: 'orders/create', address:'https://e32239be.ngrok.io/webhooks/orders_create',
       format: 'json'},
-    {topic: 'checkouts/create', address:'https://e32239be.ngrok.io/webhooks/checkouts_create',
+    {topic: 'checkouts/update', address:'https://e32239be.ngrok.io/webhooks/checkouts_update',
       format: 'json'}
   ]
 end
