@@ -8,7 +8,6 @@ class CheckoutsUpdateJob < ActiveJob::Base
       puts "starting session"
       if webhook[:shipping_address][:phone]
         puts "creating AC"
-        binding.pry
         checkout = {
                       checkout_id: webhook[:id],
                       phone: webhook[:shipping_address][:phone],
@@ -17,6 +16,7 @@ class CheckoutsUpdateJob < ActiveJob::Base
                       email: webhook[:email],
                       discount_codes: webhook[:discount_codes][:code]
                     }
+         raise "error"
          binding.pry
         puts "creating new checkout"
         new_checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create(checkout)
