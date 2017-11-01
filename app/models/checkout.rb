@@ -1,3 +1,3 @@
 class Checkout < ApplicationRecord
-  belongs_to :shop
+  belongs_to :shop, optional: true
 end
