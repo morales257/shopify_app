@@ -5,8 +5,9 @@ class CheckoutsUpdateJob < ActiveJob::Base
     shop = Shop.find_by(shopify_domain: shop_domain)
     shop.with_shopify_session do
       Rails.logger.info "starting session"
-
-      if !webhook[:shipping_address][:phone].blank? || webhook[:phone]
+      if webhook[:billing_address]
+        Rails.logger.info "This ID is already in the database"
+      elsif !webhook[:shipping_address][:phone].blank? || webhook[:phone]
         Rails.logger.info "creating AC"
         checkout = {
                       checkout_id: webhook[:id],
