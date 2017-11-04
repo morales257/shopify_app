@@ -6,7 +6,7 @@ class CheckoutsUpdateJob < ActiveJob::Base
     shop.with_shopify_session do
       Rails.logger.info "starting session"
 
-      if webhook[:shipping_address][:phone] || webhook[:phone]
+      if !webhook[:shipping_address][:phone].blank? || webhook[:phone]
         Rails.logger.info "creating AC"
         checkout = {
                       checkout_id: webhook[:id],
