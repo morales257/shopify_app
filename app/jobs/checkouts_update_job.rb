@@ -5,9 +5,8 @@ class CheckoutsUpdateJob < ActiveJob::Base
     shop = Shop.find_by(shopify_domain: shop_domain)
     shop.with_shopify_session do
       Rails.logger.info "starting session"
-      if webhook[:billing_address]
-        Rails.logger.info "This ID is already in the database"
-      elsif !webhook[:shipping_address][:phone].blank? || webhook[:phone]
+      #binding.pry
+      if !webhook[:shipping_address][:phone].blank? || webhook[:phone]
         Rails.logger.info "creating AC"
         checkout = {
                       checkout_id: webhook[:id],
@@ -17,10 +16,14 @@ class CheckoutsUpdateJob < ActiveJob::Base
                       email: webhook[:email],
                       discount_codes: webhook[:discount_codes].map { |discount_code| discount_code[:code]  }
                     }
-        Rails.logger.info "creating new checkout"
-        new_checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create!(checkout)
-        shop.checkouts << new_checkout
-        Rails.logger.info "Saved new checkout"
+        if webhook[:billing_address]
+          Rails.logger.info "This ID is already in the database"
+        else
+            Rails.logger.info "creating new checkout"
+            new_checkout = Checkout.where(checkout_id: checkout[:checkout_id]).first_or_create!(checkout)
+            shop.checkouts << new_checkout
+            Rails.logger.info "Saved new checkout"
+        end
       else
         Rails.logger.info "This checkout does not have a phone number"
       end
