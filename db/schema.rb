@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171115033452) do
+ActiveRecord::Schema.define(version: 20171120055321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,10 +51,12 @@ ActiveRecord::Schema.define(version: 20171115033452) do
 
   create_table "twilio_accounts", force: :cascade do |t|
     t.string "subaccount_name"
-    t.integer "phone_number"
+    t.bigint "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "shop_id"
+    t.string "sid"
+    t.string "auth_token"
     t.index ["shop_id"], name: "index_twilio_accounts_on_shop_id"
   end
 

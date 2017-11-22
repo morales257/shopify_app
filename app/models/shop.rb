@@ -8,7 +8,7 @@ class Shop < ActiveRecord::Base
   has_one :twilio_account, dependent: :destroy
 
   after_find :set_location
-  after_update :create_twilio_subaccount
+  after_update :setup_twilio_subaccount
   after_destroy :delete_twilio_subaccount
 
   def with_shopify!
@@ -17,7 +17,7 @@ class Shop < ActiveRecord::Base
   end
 
   private
-
+  #adds Store location to DB for better phone number matching
   def set_location
     if self.country.nil? || self.region.nil?
       self.with_shopify!
@@ -30,17 +30,59 @@ class Shop < ActiveRecord::Base
     end
   end
 
+  #creates a Twilio Account for this specific store
+  def find_twilio_subaccount
+    twilio = TwilioSubaccount.new
+    #account_exists = twilio.subaccount_exists?(self.shopify_domain)
+    #if !account_exists.nil?
+      #assign_credentials_to_sub
+      #add_phone_number
+    #else
+      create_twilio_subaccount
+      #assign_credentials_to_sub
+      #add_phone_number
+    #end
+  end
+
+  #different variation of above
+  def setup_twilio_subaccount
+    create_twilio_subaccount
+    add_phone_number
+  end
+
+  #creates Twilio Account
   def create_twilio_subaccount
-    puts "creating Twilio"
-    sub_account_name = TwilioSubaccount.new.new_account(self.shopify_domain)
-    self.create_twilio_account(subaccount_name: sub_account_name )
-    #self.update_attribute(twilio_name, TwilioAccount.new.new_account(self.shop_domain + "Twilio"))
-    #self.save
+    twilio = TwilioSubaccount.new
+    puts "Creating Twilio Account"
+    sub_account_name = twilio.new_account(self.shopify_domain)
+    self.create_twilio_account(subaccount_name: sub_account_name)
+  end
+
+  #Assigns Twilio Credentials to Twilio Account - moved
+  def assign_credentials_to_sub
+    twilio = TwilioSubaccount.new
+    friendly_name = self.twilio_account.subaccount_name
+     sid, auth_token = twilio.get_subaccount_credentials(friendly_name)
+     unless self.twilio_account.sid == sid
+       puts "assigning new credentials"
+       self.twilio_account.auth_token = auth_token
+       self.twilio_account.sid = sid
+       puts "credentials assigned to shop twilio account #{sid}"
+     end
+
+  end
+
+  def add_phone_number
+    TwilioSubaccount.new.assign_phonenumber_to_sub(self)
+  end
+
+  def send_sms(contact)
+    TwilioSubaccount.new.sms(contact)
   end
 
   def delete_twilio_subaccount
-    TwilioAccount.new.close_account(self)
-    Rails.logger.info "Deleted Twilio Account"
+    TwilioSubaccount.new.close_account(self)
+    Rails.logger.info "Closed Twilio Account"
   end
 
 end

@@ -7,8 +7,14 @@ class Checkout < ApplicationRecord
 
   private
 
+
+
   def send_text
-    TwilioSubaccount.new.sms(self)
+    @chekout = self
+    @shop = Shop.find_by(id: @checkout.shop_id)
+    @shop.send_sms(@checkout)
     #code
   end
+
+
 end
