@@ -91,7 +91,7 @@ class TwilioSubaccount
     open_api_connection
     phone_number = "+1" + person.phone.to_s
     @message = @client.messages.create(
-      from: ,
+      from: '123',
       to: "#{phone_number}",
       body: "Hey #{person.first_name}, you left without buying anything. WTF??"
       )
