@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171120055321) do
+ActiveRecord::Schema.define(version: 20171127194755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,19 @@ ActiveRecord::Schema.define(version: 20171120055321) do
     t.text "order_items"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "shop_id"
+    t.string "token"
     t.index ["checkout_id"], name: "index_checkouts_on_checkout_id", unique: true
-    t.index ["shop_id"], name: "index_checkouts_on_shop_id"
+  end
+
+  create_table "contacts", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_number"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "shop_id"
+    t.index ["shop_id"], name: "index_contacts_on_shop_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -60,6 +70,6 @@ ActiveRecord::Schema.define(version: 20171120055321) do
     t.index ["shop_id"], name: "index_twilio_accounts_on_shop_id"
   end
 
-  add_foreign_key "checkouts", "shops"
+  add_foreign_key "contacts", "shops"
   add_foreign_key "twilio_accounts", "shops"
 end

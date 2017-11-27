@@ -7,6 +7,8 @@ gem 'rails', '~> 5.1.4'
 gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
+#Sidekiq
+gem 'sidekiq'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

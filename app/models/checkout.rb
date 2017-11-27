@@ -1,9 +1,10 @@
 require './lib/apis/twilio_subaccount.rb'
 class Checkout < ApplicationRecord
   belongs_to :shop, optional: true
-  validates :phone, presence: true
 
-  after_create :send_text
+
+  #after_create :send_text
+  #after_create 1. find conversation
 
   private
 

@@ -6,6 +6,7 @@ class Shop < ActiveRecord::Base
   has_many :checkouts, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_one :twilio_account, dependent: :destroy
+  has_many :contacts, dependent: :destroy
 
   after_find :set_location
   after_update :setup_twilio_subaccount
