@@ -1,5 +1,6 @@
 class Contact < ApplicationRecord
   belongs_to :shop
-  validates :phone, presence: true
+  has_many :checkouts
+  validates :phone_number, presence: true
   validates :phone_number, uniqueness: true
 end

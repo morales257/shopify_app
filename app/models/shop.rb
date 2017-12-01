@@ -3,14 +3,13 @@ require 'pry'
 class Shop < ActiveRecord::Base
   include ShopifyApp::SessionStorage
 
-  has_many :checkouts, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_one :twilio_account, dependent: :destroy
   has_many :contacts, dependent: :destroy
 
   after_find :set_location
   after_update :setup_twilio_subaccount
-  after_destroy :delete_twilio_subaccount
+  #after_destroy :delete_twilio_subaccount
 
   def with_shopify!
     session = ShopifyAPI::Session.new(shopify_domain, shopify_token)
@@ -81,9 +80,6 @@ class Shop < ActiveRecord::Base
     TwilioSubaccount.new.sms(contact)
   end
 
-  def delete_twilio_subaccount
-    TwilioSubaccount.new.close_account(self)
-    Rails.logger.info "Closed Twilio Account"
-  end
+
 
 end

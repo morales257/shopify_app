@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171127194755) do
+ActiveRecord::Schema.define(version: 20171130203143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,14 +19,16 @@ ActiveRecord::Schema.define(version: 20171127194755) do
     t.bigint "checkout_id", null: false
     t.string "first_name"
     t.string "last_name"
-    t.string "phone", null: false
+    t.string "phone"
     t.string "email"
     t.text "discount_codes"
     t.text "order_items"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "token"
+    t.bigint "contact_id"
     t.index ["checkout_id"], name: "index_checkouts_on_checkout_id", unique: true
+    t.index ["contact_id"], name: "index_checkouts_on_contact_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -38,6 +40,15 @@ ActiveRecord::Schema.define(version: 20171127194755) do
     t.datetime "updated_at", null: false
     t.bigint "shop_id"
     t.index ["shop_id"], name: "index_contacts_on_shop_id"
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.string "product"
+    t.string "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "checkout_id"
+    t.index ["checkout_id"], name: "index_line_items_on_checkout_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -70,6 +81,8 @@ ActiveRecord::Schema.define(version: 20171127194755) do
     t.index ["shop_id"], name: "index_twilio_accounts_on_shop_id"
   end
 
+  add_foreign_key "checkouts", "contacts"
   add_foreign_key "contacts", "shops"
+  add_foreign_key "line_items", "checkouts"
   add_foreign_key "twilio_accounts", "shops"
 end

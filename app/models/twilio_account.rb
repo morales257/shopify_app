@@ -3,7 +3,7 @@ class TwilioAccount < ApplicationRecord
   belongs_to :shop
 
   after_create :set_credentials
-  before_destroy :release_phone_number
+  before_destroy :release_phone_number, :delete_twilio_subaccount
 
   private
 
@@ -22,5 +22,10 @@ class TwilioAccount < ApplicationRecord
   def release_phone_number
     twilio = TwilioSubaccount.new
     twilio.return_phone_to_master(self.sid, self.auth_token)
+  end
+
+  def delete_twilio_subaccount
+    TwilioSubaccount.new.close_account(self.sid)
+    Rails.logger.info "Closed Twilio Account"
   end
 end

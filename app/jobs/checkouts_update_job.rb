@@ -12,8 +12,8 @@ class CheckoutsUpdateJob < ActiveJob::Base
         checkout_id = webhook[:id]
         checkout_created_at = webhook[:created_at]
         checkout_token = webhook[:token]
-        DetermineAbandonementWorker.perform_in(1.minute,shop.shopify_domain,
-          checkout_id, checkout_created_at, checkout_token)
+        DetermineAbandonementWorker.perform_in(1.minute,shop.shopify_domain, checkout_created_at,
+          checkout_token, checkout_id)
       #   Rails.logger.info "creating AC"
       #   checkout = {
       #                 checkout_id: webhook[:id],

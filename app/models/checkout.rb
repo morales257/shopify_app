@@ -1,6 +1,7 @@
 require './lib/apis/twilio_subaccount.rb'
 class Checkout < ApplicationRecord
-  belongs_to :shop, optional: true
+  belongs_to :contact, optional: true
+  has_many :line_items, dependent: :destroy
 
 
   #after_create :send_text

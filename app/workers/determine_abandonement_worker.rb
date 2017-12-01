@@ -12,23 +12,31 @@ class DetermineAbandonementWorker
       abandoned_checkout = {
                   checkout_id: checkout_id,
                    token: checkout_token
-                   #discount_codes: checkout.discount_codes.map { |discount_code| discount_code[:code]  }
                     }
       customer = {
-        phone: checkout.shipping_address.phone || checkout.phone || checkout.customer.phone,
+        phone_number: checkout.shipping_address.phone || checkout.phone || checkout.customer.phone,
         first_name: checkout.shipping_address.first_name,
         last_name: checkout.shipping_address.last_name,
          email: checkout.email,
       }
-      unless shop.contacts.where(phone_number: customer[:phone]).exists?
+
+      unless shop.contacts.where(phone_number: customer[:phone_number]).exists?
         shop.contacts.create!(customer)
         Rails.logger.info "#{customer[:first_name]} added to your Contacts."
       end
 
-      contact = Contact.find_by(phone_number: customer[:phone])
-      new_checkout = Checkout.where(checkout_id: checkout.id).first_or_create!(abandoned_checkout)
+      contact = Contact.find_by(phone_number: customer[:phone_number])
+      new_checkout = Checkout.where(checkout_id: abandoned_checkout[:checkout_id]).first_or_create(abandoned_checkout)
       contact.checkouts << new_checkout
       Rails.logger.info "Saved new checkout"
+
+      abandoned = Checkout.where(checkout_id: abandoned_checkout[:checkout_id])
+      line_items = checkout.line_items
+      line_items.each do |item|
+        cart_item = { product: item.title, price: item.price}
+        abandoned.line_items.create!(cart_item)
+        Rails.logger.infro "Saved #{cart_item[:product]}"
+      end
     end
     #orders = ShopifyAPI::Order.find(:all, :params => { :created_at_min => created_at, :fields => "checkout_token"})
 #     @order = ""

@@ -79,9 +79,9 @@ class TwilioSubaccount
     end
   end
 
-  def close_account(shop)
+  def close_account(account_sid)
     open_api_connection
-    @account = @client.api.accounts(shop).fetch
+    @account = @client.api.accounts(account_sid).fetch
     @account.update(status: 'closed')
 
     puts @account.status
